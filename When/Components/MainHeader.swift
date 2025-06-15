@@ -3,42 +3,12 @@ import PhosphorSwift
 import SwiftUI
 
 struct MainHeader: View {
-    let station: Station?
     let onGearButtonTap: () -> Void
 
     var body: some View {
-        if let station = station,
-            let latitude = station.latitude,
-            let longitude = station.longitude
-        {
-            ZStack(alignment: .topTrailing) {
-                Map(
-                    position: .constant(
-                        .region(
-                            MKCoordinateRegion(
-                                center: CLLocationCoordinate2D(
-                                    latitude: latitude, longitude: longitude),
-                                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                            )))
-                ) {
-                    Marker(
-                        station.name,
-                        coordinate: CLLocationCoordinate2D(
-                            latitude: latitude,
-                            longitude: longitude
-                        ))
-                }
-                .frame(height: 200)
-                .allowsHitTesting(false)
-
-                gearButton
-            }
-            DefaultDivider()
-        } else {
-            HStack {
-                Spacer()
-                gearButton
-            }
+        HStack {
+            Spacer()
+            gearButton
         }
     }
 
@@ -47,9 +17,12 @@ struct MainHeader: View {
             Ph.faders.regular.color(Color.dDefault)
                 .frame(width: 24, height: 24)
                 .padding(12)
+
+                // Needed so that .plain button style takes the whole area as tappable, including the empty space
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .background(Color.yellow)
+        .background(Color.dBackground)
         .clipShape(Circle())
         .padding(.top, 60)
         .padding(.trailing, 16)
@@ -58,12 +31,6 @@ struct MainHeader: View {
 
 #Preview {
     MainHeader(
-        station: Station(
-            id: "900100003",
-            name: "S+U Alexanderplatz Bhf (Berlin)",
-            latitude: 52.521508,
-            longitude: 13.411267
-        ),
         onGearButtonTap: {}
     )
 }
